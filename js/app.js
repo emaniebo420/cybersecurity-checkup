@@ -68,7 +68,7 @@ function renderIntro() {
 
       <div class="card name-card">
         <label class="label-sm" for="nameInput">Your name (optional, for the report)</label>
-        <input id="nameInput" type="text" placeholder="e.g. Boyong" value="${escapeHtml(state.name)}" />
+        <input id="nameInput" type="text" placeholder="e.g. Maria Juana" value="${escapeHtml(state.name)}" />
       </div>
 
       <div class="cat-grid">
