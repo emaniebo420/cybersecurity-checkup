@@ -34,7 +34,7 @@ const root = document.getElementById("app");
 
 function setAnswer(catId, qIndex, score) {
   state.answers[`${catId}-${qIndex}`] = score;
-  render();
+  render(false); // stay in place — don't jump to top just for selecting an answer
 }
 
 function categoryAnswered(cat) {
@@ -61,14 +61,14 @@ function renderIntro() {
     <div class="fade-in">
       <h1 class="hero-title">How exposed are<br>your online habits?</h1>
       <p class="hero-sub">
-        A ${TOTAL_QUESTIONS}-question self-assessment across passwords, MFA, phishing awareness,
-        updates, privacy, backups, and network security. No scanning, no accounts —
-        just your honest answers, scored on the spot.
+        A ${TOTAL_QUESTIONS}-question checkup about your everyday online habits — passwords, logins,
+        scam awareness, updates, privacy, backups, and your home Wi-Fi. No tech knowledge needed.
+        Just answer honestly and get your results right away.
       </p>
 
       <div class="card name-card">
         <label class="label-sm" for="nameInput">Your name (optional, for the report)</label>
-        <input id="nameInput" type="text" placeholder="e.g. Maria Juana" value="${escapeHtml(state.name)}" />
+        <input id="nameInput" type="text" placeholder="e.g. Boyong" value="${escapeHtml(state.name)}" />
       </div>
 
       <div class="cat-grid">
@@ -174,14 +174,14 @@ function renderPwnedCheck() {
       <h3 class="eyebrow">${icon("lock", 14)} Password exposure check</h3>
       <div class="card">
         <p class="pwned-intro">
-          Check whether a password you use has already turned up in a known data breach —
+          Type a password you use, and we'll check if it has already been leaked in a data breach before —
           powered by the free
-          <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener">Have I Been Pwned Pwned Passwords</a> API.
+          <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener">Have I Been Pwned</a> service.
         </p>
         <p class="pwned-privacy">
-          ${icon("check", 14)} Your password is hashed (SHA-1) in your browser first. Only the first
-          5 characters of that hash are ever sent — the full password never leaves your device,
-          and nothing is stored.
+          ${icon("check", 14)} Your password is scrambled into a code right on your own device before anything
+          is sent — only a small piece of that scrambled code is sent out, never your actual password.
+          Nothing is saved or stored.
         </p>
         <div class="pwned-input-row">
           <input id="pwnedInput" type="password" placeholder="Type a password to check" autocomplete="new-password" />
@@ -202,15 +202,13 @@ function renderEmailBreachCheck() {
       <h3 class="eyebrow">${icon("mail", 14)} Email breach check</h3>
       <div class="card">
         <p class="pwned-intro">
-          Check whether an email address has appeared in a known data breach — powered by the free,
-          open-source <a href="https://xposedornot.com" target="_blank" rel="noopener">XposedOrNot</a> database.
+          Type an email address, and we'll check if it has shown up in a known data leak before —
+          powered by the free, open-source <a href="https://xposedornot.com" target="_blank" rel="noopener">XposedOrNot</a> service.
         </p>
         <p class="pwned-privacy pwned-note">
-          ${icon("alert", 14)} Unlike the password check above, this one has to send the actual
-          email address to XposedOrNot's public API to look it up — there's no way to check "is
-          this email breached" without revealing which email you're asking about. Only use an
-          address you're comfortable sharing with a third-party lookup service. Nothing is
-          stored on this site.
+          ${icon("alert", 14)} Unlike the password check above, this one needs to send the actual
+          email address to check it — there's no way around that. Only type in an email you're
+          comfortable sharing with this outside service. Nothing is saved here on this site.
         </p>
         <div class="pwned-input-row">
           <input id="emailInput" type="email" placeholder="e.g. yourname@gmail.com" autocomplete="email" />
@@ -390,12 +388,12 @@ function escapeHtml(str) {
 // ---------------------------------------------------------------------------
 // Main render + event wiring
 // ---------------------------------------------------------------------------
-function render() {
+function render(scrollTop = true) {
   if (state.stage === "intro") root.innerHTML = renderIntro();
   else if (state.stage === "quiz") root.innerHTML = renderQuiz();
   else root.innerHTML = renderResults();
   wireEvents();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (scrollTop) window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function wireEvents() {
